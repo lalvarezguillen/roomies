@@ -12,7 +12,6 @@ type Person struct {
 	Phone            string
 	PwHash           string
 	DOB              string
-	Roommates        string
 	Bio              string
 	RegistrationDate time.Time
 }
