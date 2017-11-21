@@ -12,16 +12,16 @@ import (
 const coll string = "people"
 
 // GetByID obtains a Person by ID
-func GetByID(id string) (Person, error) {
+func GetByID(id string) (*Person, error) {
 	db := config.DB{}
-	p := Person{}
+	p := &Person{}
 	sess, err := db.DoDial()
 	if err != nil {
 		return p, errors.New("There was a problem connecting to DB")
 	}
 	defer sess.Close()
 	cur := sess.DB(db.Name()).C(coll)
-	err = cur.Find(bson.M{"_id": id}).One(&p)
+	err = cur.Find(bson.M{"_id": id}).One(p)
 	if err != nil {
 		return p, errors.New("There was an error querying DB")
 	}
