@@ -6,19 +6,21 @@ func main() {
 	api := echo.New()
 	api.GET("/", getAPIInfo)
 
-	api.GET("/rooms", listRooms)
-	api.GET("/rooms/:id", getRoom)
-	api.POST("/rooms/:id", publishRoom)
-	api.PUT("/rooms/:id", updateRoom)
-	api.DELETE("/rooms/:id", removeRoom)
-	api.POST("/rooms/:id/favorite", favoriteRoom)
-	api.DELETE("/rooms/:id/favorite", unfavRoom)
+	r := api.Group("/rooms")
+	r.GET("", listRooms)
+	r.GET(":id", getRoom)
+	r.POST(":id", publishRoom)
+	r.PUT(":id", updateRoom)
+	r.DELETE(":id", removeRoom)
+	r.POST(":id/favorite", favoriteRoom)
+	r.DELETE(":id/favorite", unfavRoom)
 
-	api.GET("/people", listPeople)
-	api.GET("/people/:id", getPerson)
-	api.POST("/people/:id", createPerson)
-	api.PUT("/people/:id", updatePerson)
-	api.DELETE("/people/:id", deletePerson)
+	p := api.Group("/people")
+	p.GET("", listPeople)
+	p.GET(":id", getPerson)
+	p.POST("", createPerson) // We may not need this
+	p.PUT(":id", updatePerson)
+	p.DELETE(":id", deletePerson)
 
 	api.Logger.Fatal(api.Start(":1234"))
 }
