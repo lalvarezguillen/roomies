@@ -9,6 +9,28 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
+//ListRooms fetches paginated rooms
+func ListRooms(roomsQ *RoomsListQuery) (RoomsLastID, error) {
+	db := config.DB{}
+	sess, err := db.DoDial()
+	var rs Rooms
+	result := RoomsLastID{&rs, ""}
+	if err != nil {
+		return result, errors.New("There was a problem connecting to the DB")
+	}
+	defer sess.Close()
+	cur := sess.DB(db.Name()).C(coll)
+	var query bson.M
+	if roomsQ.LastID != "" {
+		query = bson.M{"_id": bson.M{"$lt": roomsQ.LastID}, "available": true}
+	} else {
+		query = bson.M{"available": true}
+	}
+	err = cur.Find(query).Sort("-ID").Limit(roomsQ.Limit).All(rs)
+	result = RoomsLastID{&rs, rs[len(rs)-1].ID}
+	return result, nil
+}
+
 // GetByID fetches a Room from DB by ID
 func GetByID(id string) (*Room, error) {
 	db := config.DB{}

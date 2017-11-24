@@ -53,7 +53,18 @@ type Room struct {
 	Address          Address
 	Location         Coordinates
 	Media            []MediaFile
+	Available        bool
 }
 
 // Rooms represents a list of rooms
 type Rooms []Room
+
+type RoomsListQuery struct {
+	LastID string
+	Limit  int
+}
+
+type RoomsLastID struct {
+	Rooms  *Rooms
+	LastID string
+}
