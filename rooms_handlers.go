@@ -10,25 +10,34 @@ import (
 
 func listRooms(c echo.Context) error {
 	roomsQ := room.RoomsListQuery{}
-	err := c.Bind(roomsQ)
+	err := c.Bind(&roomsQ)
 	if err != nil {
 		fmt.Println(err)
-		return c.JSON(400, "ERROR")
+		return c.JSON(400, "Error parsing the request")
 	}
-	resp, err := room.ListRooms(&roomsQ)
-	if err != nil {
-		fmt.Println(err)
-	}
+	resp := room.ListRooms(&roomsQ)
 	fmt.Println(resp)
 	return c.JSON(http.StatusOK, resp)
 }
 
 func getRoom(c echo.Context) error {
-	return c.JSON(200, "")
+	r, err := room.GetByID(c.Param("id"))
+	if err != nil {
+		fmt.Println(err)
+		return c.JSON(404, "The room requested does not exist")
+	}
+	return c.JSON(200, r)
 }
 
 func publishRoom(c echo.Context) error {
-	return c.JSON(200, "")
+	r := room.Room{}
+	err := c.Bind(&r)
+	if err != nil {
+		fmt.Println(err)
+		return c.JSON(400, err)
+	}
+	room.New(&r)
+	return c.JSON(200, r)
 }
 
 func updateRoom(c echo.Context) error {
