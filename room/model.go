@@ -4,7 +4,7 @@ import (
 	"github.com/lalvarezguillen/roomies/person"
 )
 
-const coll string = "rooms"
+const collection string = "rooms"
 
 // Rules represents the convivence rules set by the landlord.
 type Rules struct {

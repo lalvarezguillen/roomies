@@ -15,7 +15,7 @@ func listRooms(c echo.Context) error {
 		fmt.Println(err)
 		return c.JSON(400, "Error parsing the request")
 	}
-	resp := room.ListRooms(&roomsQ)
+	resp := room.List(&roomsQ)
 	fmt.Println(resp)
 	return c.JSON(http.StatusOK, resp)
 }
@@ -24,7 +24,7 @@ func getRoom(c echo.Context) error {
 	r, err := room.GetByID(c.Param("id"))
 	if err != nil {
 		fmt.Println(err)
-		return c.JSON(404, "The room requested does not exist")
+		return c.JSON(404, err)
 	}
 	return c.JSON(200, r)
 }
@@ -45,6 +45,10 @@ func updateRoom(c echo.Context) error {
 }
 
 func removeRoom(c echo.Context) error {
+	err := room.Delete(c.Param("id"))
+	if err != nil {
+		return c.JSON(404, "Room does not exists")
+	}
 	return c.JSON(200, "")
 }
 
