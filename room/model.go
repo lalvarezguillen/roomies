@@ -47,9 +47,9 @@ type Room struct {
 	Roommates        []person.Person `json:"roommates"`
 	RegistrationDate int64           `json:"registrtionDate"`
 	Price            float32         `json:"price"`
-	Rules            Rules           `json:"rules"`
-	Address          Address         `json:"address"`
-	Location         Coordinates     `json:"location"`
+	Rules            *Rules          `json:"rules"`
+	Address          *Address        `json:"address"`
+	Location         *Coordinates    `json:"location"`
 	Media            []MediaFile     `json:"media"`
 	Available        bool            `json:"available"`
 }

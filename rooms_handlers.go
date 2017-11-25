@@ -41,7 +41,18 @@ func publishRoom(c echo.Context) error {
 }
 
 func updateRoom(c echo.Context) error {
-	return c.JSON(200, "")
+	id := c.Param("id")
+	var newData map[string]interface{}
+	err := c.Bind(&newData)
+	if err != nil {
+		fmt.Println(err)
+		return c.JSON(400, err)
+	}
+	updatedR, err := room.Update(id, &newData)
+	if err != nil {
+		c.JSON(404, err)
+	}
+	return c.JSON(200, updatedR)
 }
 
 func removeRoom(c echo.Context) error {

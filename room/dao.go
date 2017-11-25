@@ -2,6 +2,7 @@ package room
 
 import (
 	"errors"
+	"fmt"
 	"time"
 
 	"github.com/lalvarezguillen/roomies/config"
@@ -77,4 +78,31 @@ func Delete(id string) error {
 	defer sess.Close()
 	coll := sess.DB(db.Name()).C(collection)
 	return coll.RemoveId(id)
+}
+
+// Update updates a room's DB entry
+func Update(id string, newData *map[string]interface{}) (*Room, error) {
+	db := config.DB{}
+	sess, err := db.DoDial()
+	if err != nil {
+		panic("There was a problem connecting to the DB")
+	}
+	defer sess.Close()
+	coll := sess.DB(db.Name()).C(collection)
+	updater := generateUpdater(newData)
+	err = coll.UpdateId(id, &updater)
+	if err != nil {
+		return &Room{}, err
+	}
+	return GetByID(id)
+}
+
+func generateUpdater(newData *map[string]interface{}) bson.M {
+	updates := bson.M{}
+	for key, val := range *newData {
+		updates[key] = val
+	}
+	updater := bson.M{"$set": updates}
+	fmt.Println(updater)
+	return updater
 }
