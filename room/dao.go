@@ -19,7 +19,7 @@ func List(roomsQ *RoomsListQuery) RoomsLastID {
 	}
 	defer sess.Close()
 	var rs Rooms
-	coll := sess.DB(db.Name()).C(collection)
+	coll := sess.DB(db.Name()).C(Collection)
 	var query bson.M
 	if roomsQ.LastID != "" {
 		query = bson.M{"_id": bson.M{"$lt": roomsQ.LastID}, "available": true}
@@ -44,7 +44,7 @@ func GetByID(id string) (*Room, error) {
 	}
 	defer sess.Close()
 	r := Room{}
-	coll := sess.DB(db.Name()).C(collection)
+	coll := sess.DB(db.Name()).C(Collection)
 	err = coll.Find(bson.M{"_id": id}).One(&r)
 	return &r, err
 }
@@ -60,7 +60,7 @@ func New(r *Room) (*Room, error) {
 	r.ID = uuid.NewV1().String()
 	r.RegistrationDate = time.Now().UTC().Unix()
 	r.Available = true
-	coll := sess.DB(db.Name()).C(collection)
+	coll := sess.DB(db.Name()).C(Collection)
 	err = coll.Insert(r)
 	if err != nil {
 		return r, errors.New("There was an error creating a new Room")
@@ -76,7 +76,7 @@ func Delete(id string) error {
 		panic("There was a problem connecting to the DB")
 	}
 	defer sess.Close()
-	coll := sess.DB(db.Name()).C(collection)
+	coll := sess.DB(db.Name()).C(Collection)
 	return coll.RemoveId(id)
 }
 
@@ -88,7 +88,7 @@ func Update(id string, newData *map[string]interface{}) (*Room, error) {
 		panic("There was a problem connecting to the DB")
 	}
 	defer sess.Close()
-	coll := sess.DB(db.Name()).C(collection)
+	coll := sess.DB(db.Name()).C(Collection)
 	updater := generateUpdater(newData)
 	err = coll.UpdateId(id, &updater)
 	if err != nil {
