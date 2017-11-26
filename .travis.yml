@@ -3,6 +3,9 @@ language: go
 go:
   - 1.9
 
+services:
+  - mongodb
+
 script:
   - go test -race -coverprofile=coverage.txt -covermode=atomic
 
