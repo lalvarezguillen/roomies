@@ -41,11 +41,11 @@ type MediaFile struct {
 // Room represents a room on the market
 type Room struct {
 	ID               string          `json:"id"    bson:"_id,omitempty"`
-	Ttle             string          `json:"title"`
+	Title            string          `json:"title"`
 	Description      string          `json:"description"`
 	RoommatesCount   int             `json:"roommatesCount"`
 	Roommates        []person.Person `json:"roommates"`
-	RegistrationDate int64           `json:"registrtionDate"`
+	RegistrationDate int64           `json:"registrationDate"`
 	Price            float32         `json:"price"`
 	Rules            *Rules          `json:"rules"`
 	Address          *Address        `json:"address"`
