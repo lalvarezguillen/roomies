@@ -2,7 +2,6 @@ package main
 
 import (
 	"encoding/json"
-	"fmt"
 	"net/http/httptest"
 	"strings"
 	"testing"
@@ -14,8 +13,11 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
-var testRoom = room.Room{Title: "New Test Room",
-	Description: "Testing"}
+var testRoom = room.Room{
+	ID:          "test-room",
+	Title:       "New Test Room",
+	Description: "Testing",
+}
 var jsonTestRoom, err = json.Marshal(testRoom)
 
 func ClearCollection(collName string) {
@@ -27,15 +29,6 @@ func ClearCollection(collName string) {
 	defer sess.Close()
 	coll := sess.DB(db.Name()).C(collName)
 	coll.RemoveAll(bson.M{})
-}
-
-func InsertTestRoom(e *echo.Echo) {
-	setupReq := httptest.NewRequest(echo.POST, "/rooms/",
-		strings.NewReader(string(jsonTestRoom)))
-	setupReq.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
-	setupRes := httptest.NewRecorder()
-	setupCtx := e.NewContext(setupReq, setupRes)
-	publishRoom(setupCtx)
 }
 
 func TestListEmptyRoomsColl(t *testing.T) {
@@ -77,20 +70,52 @@ func TestPublishRoom(t *testing.T) {
 
 func TestListRooms(t *testing.T) {
 	// setup
-	//defer ClearCollection(room.Collection)
-	e := echo.New()
-	InsertTestRoom(e)
+	room.New(&testRoom)
 	defer ClearCollection(room.Collection)
 	req := httptest.NewRequest(echo.GET, "/rooms/", strings.NewReader(""))
 	res := httptest.NewRecorder()
+	e := echo.New()
 	c := e.NewContext(req, res)
 	// test
 	if assert.NoError(t, listRooms(c)) {
 		assert.Equal(t, 200, res.Code)
 		var respBody room.RoomsLastID
 		json.Unmarshal(res.Body.Bytes(), &respBody)
-		fmt.Println(respBody)
 		assert.NotEmpty(t, respBody.Rooms)
 		assert.NotEmpty(t, respBody.LastID)
+	}
+}
+
+func TestGetRoom(t *testing.T) {
+	newR, _ := room.New(&testRoom)
+	defer ClearCollection(room.Collection)
+	e := echo.New()
+	req := httptest.NewRequest(echo.GET, "/rooms/", strings.NewReader(""))
+	res := httptest.NewRecorder()
+	c := e.NewContext(req, res)
+	c.SetParamNames("id")
+	c.SetParamValues(newR.ID)
+	// test
+	if assert.NoError(t, getRoom(c)) {
+		assert.Equal(t, 200, res.Code)
+		var respRoom room.Room
+		json.Unmarshal(res.Body.Bytes(), &respRoom)
+		assert.Equal(t, newR.ID, respRoom.ID)
+	}
+}
+
+func TestRemoveRoom(t *testing.T) {
+	// setup
+	newR, _ := room.New(&testRoom)
+	defer ClearCollection(room.Collection)
+	e := echo.New()
+	req := httptest.NewRequest(echo.DELETE, "/rooms/", strings.NewReader(""))
+	res := httptest.NewRecorder()
+	c := e.NewContext(req, res)
+	c.SetParamNames("id")
+	c.SetParamValues(newR.ID)
+	// test
+	if assert.NoError(t, removeRoom(c)) {
+		assert.Equal(t, 200, res.Code)
 	}
 }

@@ -2,7 +2,6 @@ package room
 
 import (
 	"errors"
-	"fmt"
 	"time"
 
 	"github.com/lalvarezguillen/roomies/config"
@@ -103,6 +102,5 @@ func generateUpdater(newData *map[string]interface{}) bson.M {
 		updates[key] = val
 	}
 	updater := bson.M{"$set": updates}
-	fmt.Println(updater)
 	return updater
 }
