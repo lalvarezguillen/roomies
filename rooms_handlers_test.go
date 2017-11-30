@@ -60,7 +60,7 @@ func TestPublishRoom(t *testing.T) {
 
 	// test
 	if assert.NoError(t, publishRoom(c)) {
-		assert.Equal(t, 200, res.Code)
+		assert.Equal(t, 201, res.Code)
 		var respBody room.Room
 		json.Unmarshal(res.Body.Bytes(), &respBody)
 		assert.Equal(t, testRoom.Title, respBody.Title)
@@ -76,6 +76,7 @@ func TestListRooms(t *testing.T) {
 	res := httptest.NewRecorder()
 	e := echo.New()
 	c := e.NewContext(req, res)
+
 	// test
 	if assert.NoError(t, listRooms(c)) {
 		assert.Equal(t, 200, res.Code)
@@ -87,6 +88,7 @@ func TestListRooms(t *testing.T) {
 }
 
 func TestGetRoom(t *testing.T) {
+	// setup
 	newR, _ := room.New(&testRoom)
 	defer ClearCollection(room.Collection)
 	e := echo.New()
@@ -95,6 +97,7 @@ func TestGetRoom(t *testing.T) {
 	c := e.NewContext(req, res)
 	c.SetParamNames("id")
 	c.SetParamValues(newR.ID)
+
 	// test
 	if assert.NoError(t, getRoom(c)) {
 		assert.Equal(t, 200, res.Code)
@@ -114,8 +117,9 @@ func TestRemoveRoom(t *testing.T) {
 	c := e.NewContext(req, res)
 	c.SetParamNames("id")
 	c.SetParamValues(newR.ID)
+
 	// test
 	if assert.NoError(t, removeRoom(c)) {
-		assert.Equal(t, 200, res.Code)
+		assert.Equal(t, 204, res.Code)
 	}
 }

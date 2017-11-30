@@ -32,7 +32,7 @@ func publishRoom(c echo.Context) error {
 		return c.JSON(400, err)
 	}
 	room.New(&r)
-	return c.JSON(200, r)
+	return c.JSON(201, r)
 }
 
 func updateRoom(c echo.Context) error {
@@ -54,7 +54,7 @@ func removeRoom(c echo.Context) error {
 	if err != nil {
 		return c.JSON(404, "Room does not exists")
 	}
-	return c.JSON(200, "")
+	return c.JSON(204, nil)
 }
 
 func favoriteRoom(c echo.Context) error {
