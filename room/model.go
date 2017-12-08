@@ -62,6 +62,7 @@ type RoomsListQuery struct {
 	Limit  int
 }
 
+// Rename to RoomsQueryResult
 type RoomsLastID struct {
 	Rooms  *Rooms
 	LastID string
