@@ -49,7 +49,7 @@ func GetByID(id string) (*Person, error) {
 	return p, nil
 }
 
-func New(p Person) (Person, error) {
+func New(p *Person) (*Person, error) {
 	db := config.DB{}
 	sess, err := db.DoDial()
 	if err != nil {
