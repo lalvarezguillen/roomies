@@ -80,7 +80,7 @@ func Delete(id string) error {
 }
 
 // Update updates a room's DB entry
-func Update(id string, newData *map[string]interface{}) (*Room, error) {
+func Update(r *Room) (*Room, error) {
 	db := config.DB{}
 	sess, err := db.DoDial()
 	if err != nil {
@@ -88,19 +88,9 @@ func Update(id string, newData *map[string]interface{}) (*Room, error) {
 	}
 	defer sess.Close()
 	coll := sess.DB(db.Name()).C(Collection)
-	updater := generateUpdater(newData)
-	err = coll.UpdateId(id, &updater)
+	err = coll.UpdateId(&r.ID, &r)
 	if err != nil {
-		return &Room{}, err
+		return r, err
 	}
-	return GetByID(id)
-}
-
-func generateUpdater(newData *map[string]interface{}) bson.M {
-	updates := bson.M{}
-	for key, val := range *newData {
-		updates[key] = val
-	}
-	updater := bson.M{"$set": updates}
-	return updater
+	return r, nil
 }

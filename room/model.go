@@ -1,9 +1,5 @@
 package room
 
-import (
-	"github.com/lalvarezguillen/roomies/person"
-)
-
 const Collection string = "rooms"
 
 // Rules represents the convivence rules set by the landlord.
@@ -31,18 +27,18 @@ type Coordinates struct {
 
 // Room represents a room on the market
 type Room struct {
-	ID               string          `json:"id"    bson:"_id,omitempty"`
-	Title            string          `json:"title"`
-	Description      string          `json:"description"`
-	RoommatesCount   int             `json:"roommatesCount"`
-	Roommates        []person.Person `json:"roommates"`
-	RegistrationDate int64           `json:"registrationDate"`
-	Price            float32         `json:"price"`
-	Rules            *Rules          `json:"rules"`
-	Address          *Address        `json:"address"`
-	Location         *Coordinates    `json:"location"`
-	Media            []string        `json:"media"`
-	Available        bool            `json:"available"`
+	ID               string       `json:"id"    bson:"_id,omitempty"`
+	Title            string       `json:"title"`
+	Description      string       `json:"description"`
+	RoommatesCount   int          `json:"roommatesCount"`
+	Roommates        []string     `json:"roommates"`
+	RegistrationDate int64        `json:"registrationDate"`
+	Price            float32      `json:"price"`
+	Rules            *Rules       `json:"rules"`
+	Address          *Address     `json:"address"`
+	Location         *Coordinates `json:"location"`
+	Media            []string     `json:"media"`
+	Available        bool         `json:"available"`
 }
 
 // Rooms represents a list of rooms
