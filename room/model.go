@@ -29,15 +29,6 @@ type Coordinates struct {
 	Long float32 `json:"long"`
 }
 
-// MediaFile represents images and videos that can be associated to rooms
-// or users
-type MediaFile struct {
-	ID           string `json:"id"`
-	MimeType     string `json:"mimeType"`
-	ThumbnailURL string `json:"thumbnailURL"`
-	URL          string `json:"url"`
-}
-
 // Room represents a room on the market
 type Room struct {
 	ID               string          `json:"id"    bson:"_id,omitempty"`
@@ -50,20 +41,22 @@ type Room struct {
 	Rules            *Rules          `json:"rules"`
 	Address          *Address        `json:"address"`
 	Location         *Coordinates    `json:"location"`
-	Media            []MediaFile     `json:"media"`
+	Media            []string        `json:"media"`
 	Available        bool            `json:"available"`
 }
 
 // Rooms represents a list of rooms
 type Rooms []Room
 
+// RoomsListQuery represents the parameters of a query that requests a list of
+// paginated rooms.
 type RoomsListQuery struct {
 	LastID string
 	Limit  int
 }
 
-// Rename to RoomsQueryResult
-type RoomsLastID struct {
+// RoomsQueryResult represents the results of a paginated query for Rooms
+type RoomsQueryResult struct {
 	Rooms  *Rooms
 	LastID string
 }

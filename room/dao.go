@@ -10,7 +10,7 @@ import (
 )
 
 //List fetches paginated rooms
-func List(roomsQ *RoomsListQuery) RoomsLastID {
+func List(roomsQ *RoomsListQuery) RoomsQueryResult {
 	db := config.DB{}
 	sess, err := db.DoDial()
 	if err != nil {
@@ -30,7 +30,7 @@ func List(roomsQ *RoomsListQuery) RoomsLastID {
 	if len(rs) > 0 {
 		lastID = rs[len(rs)-1].ID
 	}
-	result := RoomsLastID{&rs, lastID}
+	result := RoomsQueryResult{&rs, lastID}
 	return result
 }
 

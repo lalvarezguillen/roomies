@@ -41,7 +41,7 @@ func TestListEmptyRoomsColl(t *testing.T) {
 	// test
 	if assert.NoError(t, listRooms(c)) {
 		assert.Equal(t, 200, res.Code)
-		var respBody room.RoomsLastID
+		var respBody room.RoomsQueryResult
 		json.Unmarshal(res.Body.Bytes(), respBody)
 		assert.Empty(t, respBody.Rooms)
 		assert.Equal(t, "", respBody.LastID)
@@ -80,7 +80,7 @@ func TestListRooms(t *testing.T) {
 	// test
 	if assert.NoError(t, listRooms(c)) {
 		assert.Equal(t, 200, res.Code)
-		var respBody room.RoomsLastID
+		var respBody room.RoomsQueryResult
 		json.Unmarshal(res.Body.Bytes(), &respBody)
 		assert.NotEmpty(t, respBody.Rooms)
 		assert.NotEmpty(t, respBody.LastID)

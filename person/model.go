@@ -7,15 +7,14 @@ const Collection string = "people"
 // Person represents a user, whether he's seeking or
 // offering.
 type Person struct {
-	ID               string
-	FirstName        string
-	LastName         string
-	Email            string
-	Phone            string
-	PwHash           string
-	DOB              string
-	Bio              string
-	RegistrationDate time.Time
+	ID               string    `json:"id"    bson:"_id,omitempty"`
+	FirstName        string    `json:"firstname"`
+	LastName         string    `json:"lastName"`
+	Email            string    `json:"email"`
+	Phone            string    `json:"phone"`
+	DOB              string    `json:"dob"`
+	Bio              string    `json:"bio"`
+	RegistrationDate time.Time `json:"registrationDate"`
 }
 
 // People represents a list of Person structs

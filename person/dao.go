@@ -49,6 +49,7 @@ func GetByID(id string) (*Person, error) {
 	return p, nil
 }
 
+// New creates a new Person
 func New(p *Person) (*Person, error) {
 	db := config.DB{}
 	sess, err := db.DoDial()
@@ -64,4 +65,16 @@ func New(p *Person) (*Person, error) {
 		return p, errors.New("There was an error creatting a new Person")
 	}
 	return p, nil
+}
+
+// Delete removes a Person
+func Delete(id string) error {
+	db := config.DB{}
+	sess, err := db.DoDial()
+	if err != nil {
+		panic("There was a problem connecting to the DB")
+	}
+	defer sess.Close()
+	coll := sess.DB(db.Name()).C(Collection)
+	return coll.RemoveId(id)
 }
