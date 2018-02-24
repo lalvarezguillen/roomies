@@ -89,8 +89,5 @@ func Update(r *Room) (*Room, error) {
 	defer sess.Close()
 	coll := sess.DB(db.Name()).C(Collection)
 	err = coll.UpdateId(&r.ID, &r)
-	if err != nil {
-		return r, err
-	}
-	return r, nil
+	return r, err
 }

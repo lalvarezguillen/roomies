@@ -78,3 +78,16 @@ func Delete(id string) error {
 	coll := sess.DB(db.Name()).C(Collection)
 	return coll.RemoveId(id)
 }
+
+// Update updates a Person's DB entry
+func Update(p *Person) (*Person, error) {
+	db := config.DB{}
+	sess, err := db.DoDial()
+	if err != nil {
+		panic("There was a problem connecting to the DB")
+	}
+	defer sess.Close()
+	coll := sess.DB(db.Name()).C(Collection)
+	err = coll.UpdateId(&p.ID, &p)
+	return p, err
+}
