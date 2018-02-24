@@ -30,7 +30,7 @@ type Room struct {
 	ID               string       `json:"id"    bson:"_id,omitempty"`
 	Title            string       `json:"title"`
 	Description      string       `json:"description"`
-	RoommatesCount   int          `json:"roommatesCount"`
+	Creator          string       `json:"creator"`
 	Roommates        []string     `json:"roommates"`
 	RegistrationDate int64        `json:"registrationDate"`
 	Price            float32      `json:"price"`
