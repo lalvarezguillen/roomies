@@ -57,7 +57,7 @@ func TestPublishRoom(t *testing.T) {
 
 func TestListRooms(t *testing.T) {
 	// setup
-	New(&testRoom)
+	CreateRoom(&testRoom)
 	defer helpers.ClearCollection(Collection)
 	req := httptest.NewRequest(echo.GET, "/rooms/", strings.NewReader(""))
 	res := httptest.NewRecorder()
@@ -76,7 +76,7 @@ func TestListRooms(t *testing.T) {
 
 func TestGetRoom(t *testing.T) {
 	// setup
-	newR, _ := New(&testRoom)
+	newR, _ := CreateRoom(&testRoom)
 	defer helpers.ClearCollection(Collection)
 	e := echo.New()
 	req := httptest.NewRequest(echo.GET, "/rooms/", strings.NewReader(""))
@@ -96,7 +96,7 @@ func TestGetRoom(t *testing.T) {
 
 func TestRemoveRoom(t *testing.T) {
 	// setup
-	newR, _ := New(&testRoom)
+	newR, _ := CreateRoom(&testRoom)
 	defer helpers.ClearCollection(Collection)
 	e := echo.New()
 	req := httptest.NewRequest(echo.DELETE, "/rooms/", strings.NewReader(""))

@@ -62,7 +62,7 @@ func TestCreatePerson(t *testing.T) {
 func TestListPeople(t *testing.T) {
 	// setup
 	defer helpers.ClearCollection(Collection)
-	New(&testPerson)
+	CreatePerson(&testPerson)
 	req := httptest.NewRequest(echo.GET, "/people/", strings.NewReader(""))
 	res := httptest.NewRecorder()
 	e := echo.New()
@@ -81,7 +81,7 @@ func TestListPeople(t *testing.T) {
 func TestGetPerson(t *testing.T) {
 	// setup
 	defer helpers.ClearCollection(Collection)
-	newPerson, _ := New(&testPerson)
+	newPerson, _ := CreatePerson(&testPerson)
 	e := echo.New()
 	req := httptest.NewRequest(echo.GET, "/people/", strings.NewReader(""))
 	res := httptest.NewRecorder()
@@ -101,7 +101,7 @@ func TestGetPerson(t *testing.T) {
 func TestRemovePerson(t *testing.T) {
 	// setup
 	defer helpers.ClearCollection(Collection)
-	newPerson, _ := New(&testPerson)
+	newPerson, _ := CreatePerson(&testPerson)
 	e := echo.New()
 	req := httptest.NewRequest(echo.DELETE, "/people/", strings.NewReader(""))
 	res := httptest.NewRecorder()

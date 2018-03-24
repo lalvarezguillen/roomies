@@ -9,8 +9,8 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
-//List fetches paginated people
-func List(peopleQ *PeopleListQuery) PeopleQueryResult {
+//ListPerson fetches paginated people
+func ListPerson(peopleQ *PeopleListQuery) PeopleQueryResult {
 	db := config.DB{}
 	sess, err := db.DoDial()
 	if err != nil {
@@ -33,7 +33,7 @@ func List(peopleQ *PeopleListQuery) PeopleQueryResult {
 }
 
 // GetByID obtains a Person by ID
-func GetByID(id string) (*Person, error) {
+func GetPersonByID(id string) (*Person, error) {
 	db := config.DB{}
 	p := &Person{}
 	sess, err := db.DoDial()
@@ -49,8 +49,8 @@ func GetByID(id string) (*Person, error) {
 	return p, nil
 }
 
-// New creates a new Person
-func New(p *Person) (*Person, error) {
+// CreatePerson creates a new Person
+func CreatePerson(p *Person) (*Person, error) {
 	db := config.DB{}
 	sess, err := db.DoDial()
 	if err != nil {
@@ -72,7 +72,7 @@ func New(p *Person) (*Person, error) {
 }
 
 // Delete removes a Person
-func Delete(id string) error {
+func DeletePerson(id string) error {
 	db := config.DB{}
 	sess, err := db.DoDial()
 	if err != nil {
@@ -84,7 +84,7 @@ func Delete(id string) error {
 }
 
 // Update updates a Person's DB entry
-func Update(p *Person) (*Person, error) {
+func UpdatePerson(p *Person) (*Person, error) {
 	db := config.DB{}
 	sess, err := db.DoDial()
 	if err != nil {

@@ -11,13 +11,13 @@ func HandleList(c echo.Context) error {
 	if err != nil {
 		return c.JSON(400, "Error parsing the request")
 	}
-	resp := List(&peopleQ)
+	resp := ListPerson(&peopleQ)
 	return c.JSON(200, resp)
 }
 
 // HandleGet deals with requests to get a particular Person by ID
 func HandleGet(c echo.Context) error {
-	p, err := GetByID(c.Param("id"))
+	p, err := GetPersonByID(c.Param("id"))
 	if err != nil {
 		return c.JSON(404, err)
 	}
@@ -31,7 +31,7 @@ func HandleCreate(c echo.Context) error {
 	if err != nil {
 		return c.JSON(400, err)
 	}
-	p, err := New(&personData)
+	p, err := CreatePerson(&personData)
 	if err != nil {
 		return c.JSON(400, err)
 	}
@@ -45,7 +45,7 @@ func HandleUpdate(c echo.Context) error {
 	if err != nil {
 		return c.JSON(400, err)
 	}
-	updatedP, err := Update(&p)
+	updatedP, err := UpdatePerson(&p)
 	if err != nil {
 		return c.JSON(400, err)
 	}
@@ -54,10 +54,10 @@ func HandleUpdate(c echo.Context) error {
 
 // HandleDelete deals with requests to delete a Person entry.
 func HandleDelete(c echo.Context) error {
-	p, err := GetByID(c.Param("id"))
+	p, err := GetPersonByID(c.Param("id"))
 	if err != nil {
 		return c.JSON(404, "Does not exist")
 	}
-	Delete(p.ID)
+	DeletePerson(p.ID)
 	return c.JSON(204, nil)
 }

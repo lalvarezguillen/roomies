@@ -9,8 +9,8 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
-//List fetches paginated rooms
-func List(roomsQ *RoomsListQuery) RoomsQueryResult {
+//ListRooms fetches paginated rooms
+func ListRooms(roomsQ *RoomsListQuery) RoomsQueryResult {
 	db := config.DB{}
 	sess, err := db.DoDial()
 	if err != nil {
@@ -34,8 +34,8 @@ func List(roomsQ *RoomsListQuery) RoomsQueryResult {
 	return result
 }
 
-// GetByID fetches a Room from DB by ID
-func GetByID(id string) (*Room, error) {
+// GetRoomByID fetches a Room from DB by ID
+func GetRoomByID(id string) (*Room, error) {
 	db := config.DB{}
 	sess, err := db.DoDial()
 	if err != nil {
@@ -48,8 +48,8 @@ func GetByID(id string) (*Room, error) {
 	return &r, err
 }
 
-// New inserts a new Room in DB
-func New(r *Room) (*Room, error) {
+// CreateRoom inserts a new Room in DB
+func CreateRoom(r *Room) (*Room, error) {
 	db := config.DB{}
 	sess, err := db.DoDial()
 	if err != nil {
@@ -71,8 +71,8 @@ func New(r *Room) (*Room, error) {
 	return r, nil
 }
 
-// Delete removes a room from DB
-func Delete(id string) error {
+// DeleteRoom removes a room from DB
+func DeleteRoom(id string) error {
 	db := config.DB{}
 	sess, err := db.DoDial()
 	if err != nil {
@@ -83,8 +83,8 @@ func Delete(id string) error {
 	return coll.RemoveId(id)
 }
 
-// Update updates a room's DB entry
-func Update(r *Room) (*Room, error) {
+// UpdateRoom updates a room's DB entry
+func UpdateRoom(r *Room) (*Room, error) {
 	db := config.DB{}
 	sess, err := db.DoDial()
 	if err != nil {
