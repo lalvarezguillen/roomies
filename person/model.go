@@ -8,7 +8,7 @@ const Collection string = "people"
 // offering.
 type Person struct {
 	ID               string    `json:"id"    bson:"_id,omitempty"`
-	FirstName        string    `json:"firstname"`
+	FirstName        string    `json:"firstName"`
 	LastName         string    `json:"lastName"`
 	Email            string    `json:"email"`
 	Phone            string    `json:"phone"`

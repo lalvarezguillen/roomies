@@ -1,26 +1,30 @@
 package main
 
-import "github.com/labstack/echo"
+import (
+	"github.com/labstack/echo"
+	"github.com/lalvarezguillen/roomies/person"
+	"github.com/lalvarezguillen/roomies/room"
+)
 
 func main() {
 	api := echo.New()
 	api.GET("/", getAPIInfo)
 
 	r := api.Group("/rooms/")
-	r.GET("", listRooms)
-	r.GET(":id", getRoom)
-	r.POST("", publishRoom)
-	r.PUT(":id", updateRoom)
-	r.DELETE(":id", removeRoom)
-	r.POST(":id/favorite", favoriteRoom)
-	r.DELETE(":id/favorite", unfavRoom)
+	r.GET("", room.HandleList)
+	r.GET(":id", room.HandleGet)
+	r.POST("", room.HandleCreate)
+	r.PUT(":id", room.HandleUpdate)
+	r.DELETE(":id", room.HandleDelete)
+	r.POST(":id/favorite", room.HandleFavorite)
+	r.DELETE(":id/favorite", room.HandleUnfavorite)
 
 	p := api.Group("/people/")
-	p.GET("", listPeople)
-	p.GET(":id", getPerson)
-	p.POST("", createPerson) // We may not need this
-	p.PUT(":id", updatePerson)
-	p.DELETE(":id", deletePerson)
+	p.GET("", person.HandleList)
+	p.GET(":id", person.HandleGet)
+	p.POST("", person.HandleCreate)
+	p.PUT(":id", person.HandleUpdate)
+	p.DELETE(":id", person.HandleDelete)
 
 	api.Logger.Fatal(api.Start(":1234"))
 }

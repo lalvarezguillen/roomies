@@ -1,65 +1,64 @@
-package main
+package room
 
 import (
 	"net/http"
 
 	"github.com/labstack/echo"
-	"github.com/lalvarezguillen/roomies/room"
 )
 
-func listRooms(c echo.Context) error {
-	roomsQ := room.RoomsListQuery{}
+func HandleList(c echo.Context) error {
+	roomsQ := RoomsListQuery{}
 	err := c.Bind(&roomsQ)
 	if err != nil {
 		return c.JSON(400, "Error parsing the request")
 	}
-	resp := room.List(&roomsQ)
+	resp := List(&roomsQ)
 	return c.JSON(http.StatusOK, resp)
 }
 
-func getRoom(c echo.Context) error {
-	r, err := room.GetByID(c.Param("id"))
+func HandleGet(c echo.Context) error {
+	r, err := GetByID(c.Param("id"))
 	if err != nil {
 		return c.JSON(404, err)
 	}
 	return c.JSON(200, r)
 }
 
-func publishRoom(c echo.Context) error {
-	r := room.Room{}
+func HandleCreate(c echo.Context) error {
+	r := Room{}
 	err := c.Bind(&r)
 	if err != nil {
 		return c.JSON(400, err)
 	}
-	room.New(&r)
+	New(&r)
 	return c.JSON(201, r)
 }
 
-func updateRoom(c echo.Context) error {
-	var updatedData room.Room
+func HandleUpdate(c echo.Context) error {
+	var updatedData Room
 	err := c.Bind(&updatedData)
 	if err != nil {
 		return c.JSON(400, err)
 	}
-	updatedR, err := room.Update(&updatedData)
+	updatedR, err := Update(&updatedData)
 	if err != nil {
 		c.JSON(404, err)
 	}
 	return c.JSON(200, updatedR)
 }
 
-func removeRoom(c echo.Context) error {
-	err := room.Delete(c.Param("id"))
+func HandleDelete(c echo.Context) error {
+	err := Delete(c.Param("id"))
 	if err != nil {
 		return c.JSON(404, "Room does not exists")
 	}
 	return c.JSON(204, nil)
 }
 
-func favoriteRoom(c echo.Context) error {
+func HandleFavorite(c echo.Context) error {
 	return c.JSON(200, "")
 }
 
-func unfavRoom(c echo.Context) error {
+func HandleUnfavorite(c echo.Context) error {
 	return c.JSON(200, "")
 }

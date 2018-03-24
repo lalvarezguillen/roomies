@@ -1,4 +1,4 @@
-package main
+package room
 
 import (
 	"encoding/json"
@@ -8,12 +8,11 @@ import (
 
 	"github.com/labstack/echo"
 	"github.com/lalvarezguillen/roomies/config"
-	"github.com/lalvarezguillen/roomies/room"
 	"github.com/stretchr/testify/assert"
 	"gopkg.in/mgo.v2/bson"
 )
 
-var testRoom = room.Room{
+var testRoom = Room{
 	ID:          "test-room",
 	Title:       "New Test Room",
 	Description: "Testing",
@@ -39,9 +38,9 @@ func TestListEmptyRoomsColl(t *testing.T) {
 	c := e.NewContext(req, res)
 
 	// test
-	if assert.NoError(t, listRooms(c)) {
+	if assert.NoError(t, HandleList(c)) {
 		assert.Equal(t, 200, res.Code)
-		var respBody room.RoomsQueryResult
+		var respBody RoomsQueryResult
 		json.Unmarshal(res.Body.Bytes(), respBody)
 		assert.Empty(t, respBody.Rooms)
 		assert.Equal(t, "", respBody.LastID)
@@ -50,7 +49,7 @@ func TestListEmptyRoomsColl(t *testing.T) {
 
 func TestPublishRoom(t *testing.T) {
 	// setup
-	defer ClearCollection(room.Collection)
+	defer ClearCollection(Collection)
 	e := echo.New()
 	req := httptest.NewRequest(echo.POST, "/rooms/",
 		strings.NewReader(string(jsonTestRoom)))
@@ -59,9 +58,9 @@ func TestPublishRoom(t *testing.T) {
 	c := e.NewContext(req, res)
 
 	// test
-	if assert.NoError(t, publishRoom(c)) {
+	if assert.NoError(t, HandleCreate(c)) {
 		assert.Equal(t, 201, res.Code)
-		var respBody room.Room
+		var respBody Room
 		json.Unmarshal(res.Body.Bytes(), &respBody)
 		assert.Equal(t, testRoom.Title, respBody.Title)
 		assert.Equal(t, testRoom.Description, respBody.Description)
@@ -70,17 +69,17 @@ func TestPublishRoom(t *testing.T) {
 
 func TestListRooms(t *testing.T) {
 	// setup
-	room.New(&testRoom)
-	defer ClearCollection(room.Collection)
+	New(&testRoom)
+	defer ClearCollection(Collection)
 	req := httptest.NewRequest(echo.GET, "/rooms/", strings.NewReader(""))
 	res := httptest.NewRecorder()
 	e := echo.New()
 	c := e.NewContext(req, res)
 
 	// test
-	if assert.NoError(t, listRooms(c)) {
+	if assert.NoError(t, HandleList(c)) {
 		assert.Equal(t, 200, res.Code)
-		var respBody room.RoomsQueryResult
+		var respBody RoomsQueryResult
 		json.Unmarshal(res.Body.Bytes(), &respBody)
 		assert.NotEmpty(t, respBody.Rooms)
 		assert.NotEmpty(t, respBody.LastID)
@@ -89,8 +88,8 @@ func TestListRooms(t *testing.T) {
 
 func TestGetRoom(t *testing.T) {
 	// setup
-	newR, _ := room.New(&testRoom)
-	defer ClearCollection(room.Collection)
+	newR, _ := New(&testRoom)
+	defer ClearCollection(Collection)
 	e := echo.New()
 	req := httptest.NewRequest(echo.GET, "/rooms/", strings.NewReader(""))
 	res := httptest.NewRecorder()
@@ -99,9 +98,9 @@ func TestGetRoom(t *testing.T) {
 	c.SetParamValues(newR.ID)
 
 	// test
-	if assert.NoError(t, getRoom(c)) {
+	if assert.NoError(t, HandleGet(c)) {
 		assert.Equal(t, 200, res.Code)
-		var respRoom room.Room
+		var respRoom Room
 		json.Unmarshal(res.Body.Bytes(), &respRoom)
 		assert.Equal(t, newR.ID, respRoom.ID)
 	}
@@ -109,8 +108,8 @@ func TestGetRoom(t *testing.T) {
 
 func TestRemoveRoom(t *testing.T) {
 	// setup
-	newR, _ := room.New(&testRoom)
-	defer ClearCollection(room.Collection)
+	newR, _ := New(&testRoom)
+	defer ClearCollection(Collection)
 	e := echo.New()
 	req := httptest.NewRequest(echo.DELETE, "/rooms/", strings.NewReader(""))
 	res := httptest.NewRecorder()
@@ -119,7 +118,7 @@ func TestRemoveRoom(t *testing.T) {
 	c.SetParamValues(newR.ID)
 
 	// test
-	if assert.NoError(t, removeRoom(c)) {
+	if assert.NoError(t, HandleDelete(c)) {
 		assert.Equal(t, 204, res.Code)
 	}
 }
