@@ -10,7 +10,7 @@ import (
 )
 
 //ListPerson fetches paginated people
-func ListPerson(peopleQ *PeopleListQuery) PeopleQueryResult {
+func ListPeople(peopleQ *PeopleListQuery) PeopleQueryResult {
 	db := config.DB{}
 	sess, err := db.DoDial()
 	if err != nil {

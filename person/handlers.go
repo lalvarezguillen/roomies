@@ -11,7 +11,7 @@ func HandleList(c echo.Context) error {
 	if err != nil {
 		return c.JSON(400, "Error parsing the request")
 	}
-	resp := ListPerson(&peopleQ)
+	resp := ListPeople(&peopleQ)
 	return c.JSON(200, resp)
 }
 

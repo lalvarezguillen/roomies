@@ -1,5 +1,6 @@
 package room
 
+// Collection holds the name of the DB collection for Rooms
 const Collection string = "rooms"
 
 // Rules represents the convivence rules set by the landlord.
