@@ -39,12 +39,16 @@ func HandleCreate(c echo.Context) error {
 
 // HandleUpdate deals with requests to update a particular Room
 func HandleUpdate(c echo.Context) error {
-	var updatedData Room
-	err := c.Bind(&updatedData)
+	var r Room
+	err := c.Bind(&r)
 	if err != nil {
 		return c.JSON(400, err)
 	}
-	updatedR, err := UpdateRoom(&updatedData)
+	if r.ID != c.Param("id") {
+		resp := map[string]string{"error": "The ID of a Room can't be changed"}
+		return c.JSON(400, resp)
+	}
+	updatedR, err := UpdateRoom(&r)
 	if err != nil {
 		c.JSON(404, err)
 	}

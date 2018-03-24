@@ -114,3 +114,28 @@ func TestRemovePerson(t *testing.T) {
 		assert.Equal(t, 204, res.Code)
 	}
 }
+
+func TestUpdatePerson(t *testing.T) {
+	// setup
+	defer helpers.ClearCollection(Collection)
+	newPerson, _ := CreatePerson(&testPerson)
+	e := echo.New()
+	updatedData := newPerson
+	updatedData.Email = "updated@email.com"
+	jsonData, _ := json.Marshal(updatedData)
+	req := httptest.NewRequest(echo.PUT, "/people/",
+		strings.NewReader(string(jsonData)))
+	req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
+	res := httptest.NewRecorder()
+	c := e.NewContext(req, res)
+	c.SetParamNames("id")
+	c.SetParamValues(newPerson.ID)
+
+	// test
+	if assert.NoError(t, HandleUpdate(c)) {
+		assert.Equal(t, 200, res.Code)
+		var updatedPerson Person
+		json.Unmarshal(res.Body.Bytes(), &updatedPerson)
+		assert.Equal(t, updatedPerson.Email, updatedData.Email)
+	}
+}

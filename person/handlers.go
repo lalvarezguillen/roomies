@@ -40,12 +40,20 @@ func HandleCreate(c echo.Context) error {
 
 // HandleUpdate deals with request to update a Person entry
 func HandleUpdate(c echo.Context) error {
-	var p Person
-	err := c.Bind(&p)
-	if err != nil {
+	var newData Person
+	if err := c.Bind(&newData); err != nil {
 		return c.JSON(400, err)
 	}
-	updatedP, err := UpdatePerson(&p)
+	personID := c.Param("id")
+	if newData.ID != personID {
+		resp := map[string]string{"error": "The ID of a Person can't be changed"}
+		return c.JSON(400, resp)
+	}
+	if _, err := GetPersonByID(personID); err != nil {
+		resp := map[string]string{"error": "Does not exist"}
+		return c.JSON(404, resp)
+	}
+	updatedP, err := UpdatePerson(&newData)
 	if err != nil {
 		return c.JSON(400, err)
 	}
@@ -54,10 +62,10 @@ func HandleUpdate(c echo.Context) error {
 
 // HandleDelete deals with requests to delete a Person entry.
 func HandleDelete(c echo.Context) error {
-	p, err := GetPersonByID(c.Param("id"))
-	if err != nil {
+	personID := c.Param("id")
+	if _, err := GetPersonByID(personID); err != nil {
 		return c.JSON(404, "Does not exist")
 	}
-	DeletePerson(p.ID)
+	DeletePerson(personID)
 	return c.JSON(204, nil)
 }
