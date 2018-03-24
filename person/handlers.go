@@ -59,5 +59,5 @@ func HandleDelete(c echo.Context) error {
 		return c.JSON(404, "Does not exist")
 	}
 	Delete(p.ID)
-	return c.JSON(200, nil)
+	return c.JSON(204, nil)
 }

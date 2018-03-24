@@ -1,4 +1,4 @@
-package room
+package person
 
 import (
 	"encoding/json"
@@ -6,41 +6,45 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/labstack/echo"
 	"github.com/lalvarezguillen/roomies/helpers"
+
+	"github.com/labstack/echo"
 	"github.com/stretchr/testify/assert"
 )
 
-var testRoom = Room{
-	ID:          "test-room",
-	Title:       "New Test Room",
-	Description: "Testing",
+var testPerson = Person{
+	ID:        "test-person",
+	FirstName: "Test",
+	LastName:  "Person",
+	Email:     "test@person.com",
+	DOB:       "1990-01-01",
+	Bio:       "A Person for testing",
 }
-var jsonTestRoom, err = json.Marshal(testRoom)
 
-func TestListEmptyRoomsColl(t *testing.T) {
+var jsonTestPerson, err = json.Marshal(testPerson)
+
+func TestListEmptyPeopleColl(t *testing.T) {
 	// setup
 	e := echo.New()
-	req := httptest.NewRequest(echo.GET, "/rooms/", strings.NewReader(""))
+	req := httptest.NewRequest(echo.GET, "/people/", strings.NewReader(""))
 	res := httptest.NewRecorder()
 	c := e.NewContext(req, res)
 
-	// test
 	if assert.NoError(t, HandleList(c)) {
 		assert.Equal(t, 200, res.Code)
-		var respBody RoomsQueryResult
+		var respBody PeopleQueryResult
 		json.Unmarshal(res.Body.Bytes(), respBody)
-		assert.Empty(t, respBody.Rooms)
+		assert.Empty(t, respBody.People)
 		assert.Equal(t, "", respBody.LastID)
 	}
 }
 
-func TestPublishRoom(t *testing.T) {
+func TestCreatePerson(t *testing.T) {
 	// setup
 	defer helpers.ClearCollection(Collection)
 	e := echo.New()
-	req := httptest.NewRequest(echo.POST, "/rooms/",
-		strings.NewReader(string(jsonTestRoom)))
+	req := httptest.NewRequest(echo.POST, "/people/",
+		strings.NewReader(string(jsonTestPerson)))
 	req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 	res := httptest.NewRecorder()
 	c := e.NewContext(req, res)
@@ -48,18 +52,18 @@ func TestPublishRoom(t *testing.T) {
 	// test
 	if assert.NoError(t, HandleCreate(c)) {
 		assert.Equal(t, 201, res.Code)
-		var respBody Room
+		var respBody Person
 		json.Unmarshal(res.Body.Bytes(), &respBody)
-		assert.Equal(t, testRoom.Title, respBody.Title)
-		assert.Equal(t, testRoom.Description, respBody.Description)
+		assert.Equal(t, testPerson.Email, respBody.Email)
+		assert.Equal(t, testPerson.FirstName, respBody.FirstName)
 	}
 }
 
-func TestListRooms(t *testing.T) {
+func TestListPeople(t *testing.T) {
 	// setup
-	New(&testRoom)
 	defer helpers.ClearCollection(Collection)
-	req := httptest.NewRequest(echo.GET, "/rooms/", strings.NewReader(""))
+	New(&testPerson)
+	req := httptest.NewRequest(echo.GET, "/people/", strings.NewReader(""))
 	res := httptest.NewRecorder()
 	e := echo.New()
 	c := e.NewContext(req, res)
@@ -67,43 +71,43 @@ func TestListRooms(t *testing.T) {
 	// test
 	if assert.NoError(t, HandleList(c)) {
 		assert.Equal(t, 200, res.Code)
-		var respBody RoomsQueryResult
+		var respBody PeopleQueryResult
 		json.Unmarshal(res.Body.Bytes(), &respBody)
-		assert.NotEmpty(t, respBody.Rooms)
+		assert.NotEmpty(t, respBody.People)
 		assert.NotEmpty(t, respBody.LastID)
 	}
 }
 
-func TestGetRoom(t *testing.T) {
+func TestGetPerson(t *testing.T) {
 	// setup
-	newR, _ := New(&testRoom)
 	defer helpers.ClearCollection(Collection)
+	newPerson, _ := New(&testPerson)
 	e := echo.New()
-	req := httptest.NewRequest(echo.GET, "/rooms/", strings.NewReader(""))
+	req := httptest.NewRequest(echo.GET, "/people/", strings.NewReader(""))
 	res := httptest.NewRecorder()
 	c := e.NewContext(req, res)
 	c.SetParamNames("id")
-	c.SetParamValues(newR.ID)
+	c.SetParamValues(newPerson.ID)
 
 	// test
 	if assert.NoError(t, HandleGet(c)) {
 		assert.Equal(t, 200, res.Code)
-		var respRoom Room
-		json.Unmarshal(res.Body.Bytes(), &respRoom)
-		assert.Equal(t, newR.ID, respRoom.ID)
+		var respPerson Person
+		json.Unmarshal(res.Body.Bytes(), &respPerson)
+		assert.Equal(t, newPerson.ID, respPerson.ID)
 	}
 }
 
-func TestRemoveRoom(t *testing.T) {
+func TestRemovePerson(t *testing.T) {
 	// setup
-	newR, _ := New(&testRoom)
 	defer helpers.ClearCollection(Collection)
+	newPerson, _ := New(&testPerson)
 	e := echo.New()
-	req := httptest.NewRequest(echo.DELETE, "/rooms/", strings.NewReader(""))
+	req := httptest.NewRequest(echo.DELETE, "/people/", strings.NewReader(""))
 	res := httptest.NewRecorder()
 	c := e.NewContext(req, res)
 	c.SetParamNames("id")
-	c.SetParamValues(newR.ID)
+	c.SetParamValues(newPerson.ID)
 
 	// test
 	if assert.NoError(t, HandleDelete(c)) {

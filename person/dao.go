@@ -57,7 +57,11 @@ func New(p *Person) (*Person, error) {
 		return p, errors.New("There was an error connecting to DB")
 	}
 	defer sess.Close()
-	p.ID = uuid.NewV1().String()
+	u, err := uuid.NewV1()
+	if err != nil {
+		panic(err)
+	}
+	p.ID = u.String()
 	p.RegistrationDate = time.Now()
 	cur := sess.DB(db.Name()).C(Collection)
 	err = cur.Insert(p)

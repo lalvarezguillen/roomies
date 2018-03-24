@@ -56,7 +56,11 @@ func New(r *Room) (*Room, error) {
 		panic("There was an error connecting to Db")
 	}
 	defer sess.Close()
-	r.ID = uuid.NewV1().String()
+	u, err := uuid.NewV1()
+	if err != nil {
+		panic(err)
+	}
+	r.ID = u.String()
 	r.RegistrationDate = time.Now().UTC().Unix()
 	r.Available = true
 	coll := sess.DB(db.Name()).C(Collection)
