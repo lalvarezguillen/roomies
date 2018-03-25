@@ -9,7 +9,7 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
-//ListPerson fetches paginated people
+//ListPeople fetches paginated people
 func ListPeople(peopleQ *PeopleListQuery) PeopleQueryResult {
 	db := config.DB{}
 	sess, err := db.DoDial()

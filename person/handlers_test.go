@@ -2,10 +2,12 @@ package person
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http/httptest"
 	"strings"
 	"testing"
 
+	"github.com/jinzhu/copier"
 	"github.com/lalvarezguillen/roomies/helpers"
 
 	"github.com/labstack/echo"
@@ -137,5 +139,54 @@ func TestUpdatePerson(t *testing.T) {
 		var updatedPerson Person
 		json.Unmarshal(res.Body.Bytes(), &updatedPerson)
 		assert.Equal(t, updatedPerson.Email, updatedData.Email)
+	}
+}
+
+func TestUpdatePersonOverwritingID(t *testing.T) {
+	defer helpers.ClearCollection(Collection)
+	newPerson, _ := CreatePerson(&testPerson)
+	e := echo.New()
+	var updatedData Person
+	copier.Copy(&updatedData, &newPerson)
+	updatedData.Email = "updated@email.com"
+	updatedData.ID = "overwriting-id"
+	jsonData, _ := json.Marshal(updatedData)
+	req := httptest.NewRequest(echo.PUT, "/people/",
+		strings.NewReader(string(jsonData)))
+	req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
+	res := httptest.NewRecorder()
+	c := e.NewContext(req, res)
+	c.SetParamNames("id")
+	c.SetParamValues(newPerson.ID)
+
+	fmt.Println(updatedData.ID)
+	fmt.Println(newPerson.ID)
+	// test
+	if assert.NoError(t, HandleUpdate(c)) {
+		assert.Equal(t, 400, res.Code)
+		fmt.Println(string(res.Body.Bytes()))
+
+	}
+}
+
+func TestUpdateNonexistentPerson(t *testing.T) {
+	defer helpers.ClearCollection(Collection)
+	newPerson, _ := CreatePerson(&testPerson)
+	e := echo.New()
+	updatedData := newPerson
+	updatedData.Email = "updated@email.com"
+	updatedData.ID = "nonexistent-person"
+	jsonData, _ := json.Marshal(updatedData)
+	req := httptest.NewRequest(echo.PUT, "/people/",
+		strings.NewReader(string(jsonData)))
+	req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
+	res := httptest.NewRecorder()
+	c := e.NewContext(req, res)
+	c.SetParamNames("id")
+	c.SetParamValues("nonexistent-person")
+
+	// test
+	if assert.NoError(t, HandleUpdate(c)) {
+		assert.Equal(t, 404, res.Code)
 	}
 }
