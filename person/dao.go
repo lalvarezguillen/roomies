@@ -49,8 +49,8 @@ func GetPersonByID(id string) (*Person, error) {
 	return p, nil
 }
 
-// CreatePerson creates a new Person
-func CreatePerson(p *Person) (*Person, error) {
+// NewPerson creates a new Person
+func NewPerson(p *Person) (*Person, error) {
 	db := config.DB{}
 	sess, err := db.DoDial()
 	if err != nil {

@@ -48,8 +48,8 @@ func GetRoomByID(id string) (*Room, error) {
 	return &r, err
 }
 
-// CreateRoom inserts a new Room in DB
-func CreateRoom(r *Room) (*Room, error) {
+// NewRoom inserts a new Room in DB
+func NewRoom(r *Room) (*Room, error) {
 	db := config.DB{}
 	sess, err := db.DoDial()
 	if err != nil {

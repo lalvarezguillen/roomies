@@ -64,7 +64,7 @@ func TestCreatePerson(t *testing.T) {
 func TestListPeople(t *testing.T) {
 	// setup
 	defer helpers.ClearCollection(Collection)
-	CreatePerson(&testPerson)
+	NewPerson(&testPerson)
 	req := httptest.NewRequest(echo.GET, "/people/", strings.NewReader(""))
 	res := httptest.NewRecorder()
 	e := echo.New()
@@ -83,7 +83,7 @@ func TestListPeople(t *testing.T) {
 func TestGetPerson(t *testing.T) {
 	// setup
 	defer helpers.ClearCollection(Collection)
-	newPerson, _ := CreatePerson(&testPerson)
+	newPerson, _ := NewPerson(&testPerson)
 	e := echo.New()
 	req := httptest.NewRequest(echo.GET, "/people/", strings.NewReader(""))
 	res := httptest.NewRecorder()
@@ -103,7 +103,7 @@ func TestGetPerson(t *testing.T) {
 func TestRemovePerson(t *testing.T) {
 	// setup
 	defer helpers.ClearCollection(Collection)
-	newPerson, _ := CreatePerson(&testPerson)
+	newPerson, _ := NewPerson(&testPerson)
 	e := echo.New()
 	req := httptest.NewRequest(echo.DELETE, "/people/", strings.NewReader(""))
 	res := httptest.NewRecorder()
@@ -120,7 +120,7 @@ func TestRemovePerson(t *testing.T) {
 func TestUpdatePerson(t *testing.T) {
 	// setup
 	defer helpers.ClearCollection(Collection)
-	newPerson, _ := CreatePerson(&testPerson)
+	newPerson, _ := NewPerson(&testPerson)
 	e := echo.New()
 	updatedData := newPerson
 	updatedData.Email = "updated@email.com"
@@ -144,7 +144,7 @@ func TestUpdatePerson(t *testing.T) {
 
 func TestUpdatePersonOverwritingID(t *testing.T) {
 	defer helpers.ClearCollection(Collection)
-	newPerson, _ := CreatePerson(&testPerson)
+	newPerson, _ := NewPerson(&testPerson)
 	e := echo.New()
 	var updatedData Person
 	copier.Copy(&updatedData, &newPerson)
@@ -171,7 +171,7 @@ func TestUpdatePersonOverwritingID(t *testing.T) {
 
 func TestUpdateNonexistentPerson(t *testing.T) {
 	defer helpers.ClearCollection(Collection)
-	newPerson, _ := CreatePerson(&testPerson)
+	newPerson, _ := NewPerson(&testPerson)
 	e := echo.New()
 	updatedData := newPerson
 	updatedData.Email = "updated@email.com"

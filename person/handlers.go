@@ -31,7 +31,7 @@ func HandleCreate(c echo.Context) error {
 	if err != nil {
 		return c.JSON(400, err)
 	}
-	p, err := CreatePerson(&personData)
+	p, err := NewPerson(&personData)
 	if err != nil {
 		return c.JSON(400, err)
 	}

@@ -33,7 +33,7 @@ func HandleCreate(c echo.Context) error {
 	if err != nil {
 		return c.JSON(400, err)
 	}
-	CreateRoom(&r)
+	NewRoom(&r)
 	return c.JSON(201, r)
 }
 
