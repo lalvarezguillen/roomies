@@ -1,29 +1,30 @@
 package config
 
 import (
+	"fmt"
 	"os"
 
-	"gopkg.in/mgo.v2"
+	"github.com/jinzhu/gorm"
+	// We'll use postgres, we need its dialect
+	_ "github.com/jinzhu/gorm/dialects/postgres"
 )
 
-type DB struct {
-	Session *mgo.Session
-}
+var dbHost = os.Getenv("DB_HOST")
+var dbPort = os.Getenv("DB_PORT")
+var dbUser = os.Getenv("DB_USER")
+var dbPass = os.Getenv("DB_PASS")
+var dbName = os.Getenv("DB_NAME")
 
-func (db *DB) DoDial() (s *mgo.Session, err error) {
-	return mgo.Dial(DBUrl())
-}
-
-func (db *DB) Name() string {
-	return "roomies_testing"
-}
-
-func DBUrl() string {
-	dburl := os.Getenv("MONGO_HOST")
-
-	if dburl == "" {
-		dburl = "localhost"
+func connectDB() *gorm.DB {
+	connStr := "host=" + dbHost + " port=" + dbPort + " user=" + dbUser +
+		" password=" + dbPass + " dbname=" + dbName
+	fmt.Println(connStr)
+	db, err := gorm.Open("postgres", connStr)
+	if err != nil {
+		panic(err)
 	}
-
-	return dburl
+	return db
 }
+
+//DB is a connection to Postgres service
+var DB = connectDB()

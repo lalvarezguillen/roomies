@@ -1,5 +1,11 @@
 package room
 
+import (
+	"github.com/lalvarezguillen/roomies/user"
+
+	"github.com/jinzhu/gorm"
+)
+
 // Collection holds the name of the DB collection for Rooms
 const Collection string = "rooms"
 
@@ -28,18 +34,18 @@ type Coordinates struct {
 
 // Room represents a room on the market
 type Room struct {
-	ID               string       `json:"id"    bson:"_id,omitempty"`
-	Title            string       `json:"title"`
-	Description      string       `json:"description"`
-	Creator          string       `json:"creator"`
-	Roommates        []string     `json:"roommates"`
-	RegistrationDate int64        `json:"registrationDate"`
-	Price            float32      `json:"price"`
-	Rules            *Rules       `json:"rules"`
-	Address          *Address     `json:"address"`
-	Location         *Coordinates `json:"location"`
-	Media            []string     `json:"media"`
-	Available        bool         `json:"available"`
+	gorm.Model
+	Title       string       `json:"title"`
+	Description string       `json:"description"`
+	UserID      int          `json:"ownerID"`
+	User        user.User    `json:"owner"`
+	Available   bool         `json:"available"`
+	Roommates   []user.Users `json:"roommates"`
+	// Price       float32      `json:"price"`
+	// Rules       *Rules       `json:"rules"`
+	// Address     *Address     `json:"address"`
+	// Location    *Coordinates `json:"location"`
+	// Media            []string     `json:"media"`
 }
 
 // Rooms represents a list of rooms
