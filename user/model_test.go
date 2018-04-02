@@ -8,7 +8,11 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func testCreateUser(t *testing.T) {
+func init() {
+	config.DB.AutoMigrate(&User{})
+}
+
+func TestCreateUser(t *testing.T) {
 	testUser := User{
 		FirstName: "Test",
 		LastName:  "User",
@@ -23,6 +27,8 @@ func testCreateUser(t *testing.T) {
 
 	var usersCount int
 	var existingUsers Users
-	config.DB.Find(&existingUsers).Count(usersCount)
+	config.DB.Find(&existingUsers).Count(&usersCount)
 	assert.Equal(t, usersCount, 1)
+
+	config.DB.DropTable(&User{})
 }

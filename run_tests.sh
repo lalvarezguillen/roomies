@@ -4,4 +4,4 @@ export DB_USER=luis
 export DB_PASS=luis
 export DB_NAME=luis
 
-go test ./user
+go test ./user -v
