@@ -25,14 +25,14 @@ type User struct {
 // Users represents a list of User structs
 type Users []User
 
-// UsersListQuery Represents a query for User. Assits pagination
-type UsersListQuery struct {
-	LastID string
-	Limit  int
+// UsersQuery Represents a query for User. Assits pagination
+type UsersQuery struct {
+	Offset  int
+	Limit   int
+	Filters User
 }
 
 // UsersQueryResult represents the result of a query for People.
 type UsersQueryResult struct {
-	Users  *Users
-	LastID string
+	Users *Users `json:"users"`
 }
