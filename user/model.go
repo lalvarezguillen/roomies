@@ -6,8 +6,6 @@ import (
 	"github.com/jinzhu/gorm"
 )
 
-const Collection string = "users"
-
 // User represents a user, either someone renting a Room, or
 // someone looking for a Room, or someone who is or was a roommate of
 // the Room
