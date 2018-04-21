@@ -18,12 +18,12 @@ func main() {
 	// r.POST(":id/favorite", room.HandleFavorite)
 	// r.DELETE(":id/favorite", room.HandleUnfavorite)
 
-	p := api.Group("/users/")
-	p.GET("", user.HandleList)
-	p.GET(":id", user.HandleGet)
-	p.POST("", user.HandleCreate)
-	p.PUT(":id", user.HandleUpdate)
-	p.DELETE(":id", user.HandleDelete)
+	p := api.Group("/users")
+	p.GET("/", user.HandleList)
+	p.GET("/:id", user.HandleGet)
+	p.POST("/", user.HandleCreate)
+	p.PUT("/:id", user.HandleUpdate)
+	p.DELETE("/:id", user.HandleDelete)
 
 	api.Logger.Fatal(api.Start(":1234"))
 }

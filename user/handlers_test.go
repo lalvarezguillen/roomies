@@ -20,7 +20,7 @@ var dummyUser = User{
 	Bio:       "A User for testing",
 }
 
-var jsonTestUser, _ = json.Marshal(dummyUser)
+var jsonTestUser, _ = json.Marshal(&dummyUser)
 
 // func init() {
 // 	config.DB.AutoMigrate(&User{})
@@ -61,6 +61,9 @@ func TestHandleCreateUser(t *testing.T) {
 		json.Unmarshal(res.Body.Bytes(), &respBody)
 		assert.Equal(t, dummyUser.Email, respBody.Email)
 		assert.Equal(t, dummyUser.FirstName, respBody.FirstName)
+		var usersCount int
+		config.DB.Model(&User{}).Count(&usersCount)
+		assert.Equal(t, 1, usersCount)
 	}
 }
 

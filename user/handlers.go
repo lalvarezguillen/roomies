@@ -7,13 +7,14 @@ import (
 
 // HandleList deals with requests to query the People collection
 func HandleList(c echo.Context) error {
-	var q UsersQuery
-	err := c.Bind(&q)
-	if err != nil {
-		return c.JSON(400, "Error parsing the request")
-	}
+	// var q UsersQuery
+	// err := c.Bind(&q)
+	// if err != nil {
+	// 	return c.JSON(400, "Error parsing the request")
+	// }
 	var us Users
-	config.DB.Where(&q.Filters).Offset(q.Offset).Limit(q.Limit).Find(&us)
+	// config.DB.Where(&q.Filters).Offset(q.Offset).Limit(q.Limit).Find(&us)
+	config.DB.Find(&us)
 	return c.JSON(200, &us)
 }
 
@@ -32,7 +33,7 @@ func HandleCreate(c echo.Context) error {
 	if err != nil {
 		return c.JSON(400, err)
 	}
-	config.DB.Create(u)
+	config.DB.Create(&u)
 	return c.JSON(201, &u)
 }
 
