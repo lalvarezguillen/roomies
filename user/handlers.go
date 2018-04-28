@@ -39,6 +39,12 @@ func HandleCreate(c echo.Context) error {
 
 // HandleUpdate deals with request to update a Person entry
 func HandleUpdate(c echo.Context) error {
+	id := c.Param("id")
+	var uc int
+	config.DB.Model(&User{}).Where("id = ?", id).Count(&uc)
+	if uc < 1 {
+		return c.JSON(404, nil)
+	}
 	var u User
 	err := c.Bind(&u)
 	if err != nil {
