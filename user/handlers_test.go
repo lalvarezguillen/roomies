@@ -124,6 +124,9 @@ func TestRemovePerson(t *testing.T) {
 	// test
 	if assert.NoError(t, HandleDelete(c)) {
 		assert.Equal(t, 204, res.Code)
+		var uc int
+		config.DB.Model(&User{}).Count(&uc)
+		assert.Equal(t, 0, uc)
 	}
 }
 
@@ -151,6 +154,9 @@ func TestUpdatePerson(t *testing.T) {
 		var updatedUser User
 		json.Unmarshal(res.Body.Bytes(), &updatedUser)
 		assert.Equal(t, updatedData.Email, updatedUser.Email)
+		var uc int
+		config.DB.Model(&User{}).Count(&uc)
+		assert.Equal(t, 1, uc)
 	}
 }
 
